@@ -1,6 +1,9 @@
 package ly.generalassemb.drewmahrt.shoppinglistdetailview;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
@@ -10,7 +13,6 @@ import java.util.Locale;
 
 public class DetailActivity extends AppCompatActivity {
 
-    public static final String ITEM_ID_KEY = "itemIdKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +25,7 @@ public class DetailActivity extends AppCompatActivity {
         TextView category = (TextView) findViewById(R.id.detail_category);
 
         // Get ID of selected item
-        int selectedItemId = getIntent().getIntExtra(ITEM_ID_KEY, -1);
+        int selectedItemId = getIntent().getIntExtra(DetailFragment.ITEM_ID_KEY, -1);
 
         // If we don't have a valid ID, no reason to continue
         if (selectedItemId == -1) {
@@ -42,13 +44,19 @@ public class DetailActivity extends AppCompatActivity {
             finish();
         }
 
-        // Populate the TextViews
-        name.setText(selectedItem.getName());
-        description.setText(selectedItem.getDescription());
-        category.setText(selectedItem.getType());
+        Fragment fragment = DetailFragment.newInstance(selectedItemId);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.detail_fragment_container,fragment);
+        fragmentTransaction.commit();
 
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.getDefault());
-        double priceValue = Double.valueOf(selectedItem.getPrice());
-        price.setText(currencyFormat.format(priceValue));
+//        // Populate the TextViews
+//        name.setText(selectedItem.getName());
+//        description.setText(selectedItem.getDescription());
+//        category.setText(selectedItem.getType());
+//
+//        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.getDefault());
+//        double priceValue = Double.valueOf(selectedItem.getPrice());
+//        price.setText(currencyFormat.format(priceValue));
     }
 }

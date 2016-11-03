@@ -15,10 +15,17 @@ import java.util.List;
 
 public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingItemViewHolder> {
     private List<ShoppingItem> mShoppingItems;
+    private OnItemSelectedListener mListener;
 
-    public ShoppingListAdapter(List<ShoppingItem> shoppingItems) {
+    public ShoppingListAdapter(List<ShoppingItem> shoppingItems, OnItemSelectedListener listener) {
         mShoppingItems = shoppingItems;
+        mListener = listener;
     }
+
+    public interface OnItemSelectedListener{
+        void onItemSelected(int itemId);
+    }
+
 
     @Override
     public ShoppingItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -27,28 +34,35 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<ShoppingItemViewHo
 
     @Override
     public void onBindViewHolder(final ShoppingItemViewHolder holder, int position) {
-
         final ShoppingItem currentItem = mShoppingItems.get(position);
 
         holder.mNameTextView.setText(currentItem.getName());
 
-        // Add an OnClickListener that launches DetailActivity and passes it the item's ID
         holder.mNameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Get a reference to the MainActivity as a Context
-                Context mainActivity = holder.mNameTextView.getContext();
-
-                // Create the intent
-                Intent intent = new Intent(mainActivity, DetailActivity.class);
-
-                // Add the ID as an extra
-                intent.putExtra(DetailActivity.ITEM_ID_KEY, currentItem.getId());
-
-                // Start the detail activity
-                mainActivity.startActivity(intent);
+                mListener.onItemSelected(mShoppingItems.get(holder.getAdapterPosition()).getId());
             }
         });
+
+
+//        // Add an OnClickListener that launches DetailActivity and passes it the item's ID
+//        holder.mNameTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                // Get a reference to the MainActivity as a Context
+//                Context mainActivity = holder.mNameTextView.getContext();
+//
+//                // Create the intent
+//                Intent intent = new Intent(mainActivity, DetailActivity.class);
+//
+//                // Add the ID as an extra
+//                intent.putExtra(DetailActivity.ITEM_ID_KEY, currentItem.getId());
+//
+//                // Start the detail activity
+//                mainActivity.startActivity(intent);
+//            }
+//        });
     }
 
     @Override
